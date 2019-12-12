@@ -147,6 +147,11 @@ def compile_py_files(toc, workpath):
         # seems inelegant to copy it all then subscript 4 bytes.
         needs_compile = mtime(src_fnm) > mtime(obj_fnm)
         if not needs_compile:
+
+            # NOTE: FileNotFoundError workaround
+            if not os.path.exists(obj_fnm):
+                continue
+
             with open(obj_fnm, 'rb') as fh:
                 needs_compile = fh.read()[:4] != BYTECODE_MAGIC
         if needs_compile:
